@@ -1,60 +1,140 @@
+import java.util.Scanner;
+
 public class App {
 
-    public static Node addTwoNumbers(Node l1, Node l2) {
-        Node result = new Node();
-        Node head = result; // copy
+    public static void removeCycle(Node head, Node fast) {
+        Node s = fast.next;
+        int count = 1;
 
-        int carry = 0;
-
-        while (l1 != null && l2 != null) {
-            result.next = new Node((l1.value + l2.value + carry) % 10);
-            carry = (l1.value + l2.value + carry) / 10;
-            result = result.next;
-            l1 = l1.next;
-            l2 = l2.next;
+        while (s != fast) {
+            s = s.next;
+            count++;
         }
 
-        while (l1 != null) {
-            result.next = new Node((l1.value + carry) % 10);
-            carry = (l1.value + carry) / 10;
-            result = result.next;
-            l1 = l1.next;
+        Node y = head;
+
+        for (int i = 0; i < count; i++)
+            y = y.next;
+
+        Node x = head;
+
+        while (y != x) {
+            x = x.next;
+            y = y.next;
         }
 
-        while (l2 != null) {
-            result.next = new Node((l2.value + carry) % 10);
-            carry = (l2.value + carry) / 10;
-            result = result.next;
-            l2 = l2.next;
+        for (int i = 0; i < count - 1; i++)
+            y = y.next;
+
+        y.next = null;
+    }
+
+    public static boolean detectAndRemove(Node head) {
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast) {
+                removeCycle(head, fast);
+                return true;
+            }
         }
 
-        if (carry == 1) {
-            result.next = new Node(carry);
+        return false;
+    }
+
+    public static void printList(Node head) {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.value + " ");
+            temp = temp.next;
+        }
+    }
+
+    public static void callsItself() {
+        System.out.println("Hello");
+        callsItself();
+    }
+
+    public static int fact(int x) {
+        if (x == 1)
+            return 1; // base case
+        return x * fact(x - 1);
+    }
+
+    public static int fib(int x) {
+        if (x <= 1) {
+            return x;
+        }
+        return fib(x - 2) + fib(x - 1);
+    }
+
+    public static int fibIterative(int x) {
+        if (x <= 1) {
+            return x;
+        }
+        int a = 0;
+        int b = 1;
+        for (int i = 2; i <= x; i++) {
+            int temp = b;
+            b = b + a;
+            a = temp;
+        }
+        return b;
+    }
+
+    static int hcf(int a, int b) {
+        if (b == 0) {
+            return a;
+        }
+        return hcf(b, a % b);
+    }
+
+    public static int minSteps(int n) {
+        if (n == 1)
+            return 0;
+
+        int div3 = Integer.MAX_VALUE;
+        int div2 = Integer.MAX_VALUE;
+        int sub1 = Integer.MAX_VALUE;
+
+        if (n % 3 == 0) {
+            div3 = 1 + minSteps(n / 3);
+        } else if (n % 2 == 0) {
+            div2 = 1 + minSteps(n / 2);
+        } else {
+            sub1 = 1 + minSteps(n - 1);
         }
 
-        return head.next;
+        return Math.min(sub1, Math.min(div3, div2));
     }
 
     public static void main(String[] args) {
-        LinkedList l1 = new LinkedList();
-        LinkedList l2 = new LinkedList();
+        BST tree = new BST();
 
-        l1.insert(9);
-        l1.insert(9);
-        l1.insert(9);
-        l1.insert(9);
+        Scanner sc = new Scanner(System.in);
 
-        l1.printList();
-
-        l2.insert(9);
-        l2.insert(9);
-        l2.insert(9);
-
-        l2.printList();
-
-        LinkedList result = new LinkedList();
-        result.head = addTwoNumbers(l1.head, l2.head);
-
-        result.printList();
+        while (sc.hasNext()) {
+            switch (sc.nextInt()) {
+                case 1:
+                    tree.insert(sc.nextInt());
+                    break;
+                case 2:
+                    tree.inOrder(tree.root);
+                    break;
+                case 3:
+                    tree.postOrder(tree.root);
+                    break;
+                case 4:
+                    tree.preOrder(tree.root);
+                    break;
+                case 5:
+                    tree.root = tree.delete(tree.root, sc.nextInt());
+                    break;
+            }
+        }
     }
 }

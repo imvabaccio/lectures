@@ -1,4 +1,4 @@
-public class LinkedList {
+public class LL {
     Node head;
 
     public void insert(int value) {
@@ -99,6 +99,12 @@ public class LinkedList {
         }
         prev.next = nth.next;
         head = dummy.next;
+    }
+
+    public int deleteHead() {
+        int x = head.value;
+        head = head.next;
+        return x;
     }
 
     public void printList() {
