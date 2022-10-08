@@ -1,5 +1,40 @@
+import java.util.Stack;
+
 public class LL {
     Node head;
+
+    public Node reverse(Node head) {
+        if (head == null || head.next == null)
+            return head;
+
+        Node newNode = reverse(head.next);
+
+        head.next.next = head;
+        head.next = null;
+
+        return newNode;
+    }
+
+    public void reverseStack() {
+        Stack<Node> st = new Stack<>();
+
+        while (head != null) {
+            Node x = head;
+            head = head.next;
+            x.next = null;
+            st.push(x);
+        }
+
+        Node dummy = new Node(-1);
+        Node temp = dummy;
+
+        while (!st.isEmpty()) {
+            temp.next = st.pop();
+            temp = temp.next;
+        }
+
+        head = dummy.next;
+    }
 
     public void insert(int value) {
         if (head == null) {
@@ -111,7 +146,7 @@ public class LL {
         Node temp = head;
 
         while (temp != null) {
-            System.out.print(temp.value + " ");
+            System.out.print(temp.value + " -> ");
             temp = temp.next;
         }
         System.out.println();

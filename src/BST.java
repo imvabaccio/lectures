@@ -142,16 +142,18 @@ public class BST {
         q.offer(root);
 
         while (!q.isEmpty()) {
-            double sum = 0;
+            // double sum = 0;
             int size = q.size();
-            for (int i = 0; i < size; i++) {
-                TreeNode front = q.poll();
-                System.out.println(front.value);
-                if (front.left != null)
-                    q.offer(front.left);
-                if (front.right != null)
-                    q.offer(front.right);
-            }
+            // for (int i = 0; i < size; i++) {
+            TreeNode front = q.poll();
+            System.out.print(front.value + " ");
+            if (front.left != null)
+                q.offer(front.left);
+            if (front.right != null)
+                q.offer(front.right);
+
+            // }
+            // System.out.println("");
         }
     }
 

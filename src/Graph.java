@@ -1,80 +1,110 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
+import java.util.Queue;
 
 public class Graph {
-    public int vertices;
-    public ArrayList<Integer>[] adjList;
+    HashMap<Character, ArrayList<Character>> g;
 
-    Graph(int v) {
-        this.vertices = v;
-        adjList = new ArrayList[v];
-
-        for (int i = 0; i < v; i++)
-            adjList[i] = new ArrayList<Integer>();
+    public Graph() {
+        g = new HashMap<>();
     }
 
-    void addEdge(int v, int w) {
-        adjList[v].add(w);
-        adjList[w].add(v);
+    public void addEgde(char x, char y) {
+        ArrayList arr = g.getOrDefault(x, new ArrayList<>());
+        arr.add(y);
+        g.put(x, arr);
+
+        arr = g.getOrDefault(y, new ArrayList<>());
+        arr.add(x);
+        g.put(y, arr);
     }
 
-    void BFS(int x) {
-        boolean[] visited = new boolean[vertices];
+    public void DFS(char x) {
+        HashMap<Character, Boolean> visited = new HashMap<>();
 
-        Queue<Integer> queue = new LinkedList();
-
-        queue.offer(x);
-        visited[x] = true;
-
-        while (!queue.isEmpty()) {
-            x = queue.poll();
-            System.out.println(x);
-
-            for (int i = 0; i < adjList[x].size(); i++) {
-                int n = adjList[x].get(i);
-                if (!visited[n]) {
-                    visited[n] = true;
-                    queue.offer(n);
-                }
-            }
+        for (Character key : g.keySet()) {
+            visited.put(key, false);
         }
-    }
 
-    void DFSRecursive(int x, boolean[] visited) {
-        visited[x] = true;
-        System.out.println(x);
-
-        for (int i = 0; i < adjList[x].size(); i++) {
-            int n = adjList[x].get(i);
-            if (!visited[n]) {
-                DFSRecursive(n, visited);
-            }
-        }
-    }
-
-    void DFS(int x) {
-        boolean[] visited = new boolean[vertices];
-
-        Stack<Integer> stack = new Stack<Integer>();
+        Stack<Character> stack = new Stack<>();
 
         stack.push(x);
+        visited.put(x, true);
 
-        while (!stack.isEmpty()) {
-            x = stack.pop();
+        while (!stack.isEmpty()) { // while the stack is not empty
+            char curr = stack.pop();
 
-            if (!visited[x]) {
-                visited[x] = true;
-                System.out.println(x);
-            }
+            System.out.print(curr + " ");
+            // visited.put(curr, true);
 
-            for (int i = 0; i < adjList[x].size(); i++) {
-                int n = adjList[x].get(i);
-                if (!visited[n]) {
-                    stack.push(n);
+            for (int j = 0; j < g.get(curr).size(); j++) {
+                char tmp = g.get(curr).get(j);
+                if (!visited.get(tmp)) {
+                    stack.push(tmp);
+                    visited.put(tmp, true);
                 }
             }
+        }
+    }
+
+    public void BFS(char x) {
+        HashMap<Character, Boolean> visited = new HashMap<>();
+
+        for (Character key : g.keySet()) {
+            visited.put(key, false);
+        }
+
+        Queue<Character> q = new LinkedList();
+
+        q.offer(x);
+        visited.put(x, true);
+
+        while (!q.isEmpty()) {
+            char curr = q.poll();
+
+            System.out.print(curr + " ");
+            // visited.put(curr, true);
+
+            for (int j = 0; j < g.get(curr).size(); j++) {
+                char tmp = g.get(curr).get(j);
+                if (!visited.get(tmp)) {
+                    q.offer(tmp);
+                    visited.put(tmp, true);
+                }
+            }
+        }
+    }
+
+    public void DFS(char x, HashMap<Character, Boolean> visited) {
+        if (visited == null) {
+            visited = new HashMap<>();
+
+            for (Character key : g.keySet()) {
+                visited.put(key, false);
+            }
+        }
+
+        System.out.print(x + " ");
+        visited.put(x, true);
+
+        for (int j = 0; j < g.get(x).size(); j++) {
+            char tmp = g.get(x).get(j);
+            if (!visited.get(tmp)) {
+                DFS(tmp, visited); // stack.push(tmp);
+            }
+        }
+    }
+
+    public void printGraph() {
+        for (Character key : g.keySet()) {
+            System.out.print(key + ": ");
+            for (int j = 0; j < g.get(key).size(); j++) {
+                System.out.print(g.get(key).get(j) + " ");
+            }
+            System.out.println();
         }
     }
 }

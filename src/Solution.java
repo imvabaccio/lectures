@@ -1,29 +1,36 @@
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class Solution {
-    public int longestPalindrome(String s) {
-        HashMap<Character, Integer> hm = new HashMap<Character, Integer>();
-        int result = 0;
+    static List<String> res = new ArrayList<String>();
 
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            hm.put(c, 1 + hm.getOrDefault(c, 0));
+    public static char[] swap(char[] arr, int x, int y) {
+        char temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;
+
+        return arr;
+    }
+
+    public List<String> find_permutation(String S) {
+        char[] arr = S.toCharArray();
+        backtrack(arr, 0, arr.length - 1);
+        return res;
+    }
+
+    public static void backtrack(char[] arr, int start, int end) {
+        if (start == end) {
+            // for (char i : arr)
+            // System.out.print(i);
+            // System.out.println();
+            res.add(Arrays.toString(arr));
+            return;
         }
-
-        boolean oddValueTaken = false;
-        for (int count : hm.values()) {
-            if (count % 2 == 0) {
-                result += count;
-            } else {
-                if (oddValueTaken) {
-                    result += count - 1;
-                } else {
-                    result += count;
-                    oddValueTaken = true;
-                }
-            }
+        for (int i = start; i <= end; i++) {
+            arr = swap(arr, start, i);
+            backtrack(arr, start + 1, end);
+            arr = swap(arr, start, i);
         }
-
-        return result;
     }
 }
